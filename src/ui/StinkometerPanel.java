@@ -7,10 +7,11 @@ import java.awt.*;
 
 /** Vertical gauge. Each strike fills a third; overflow shows green slime spilling out of the top. */
 public class StinkometerPanel extends JPanel implements AnimationClock.Tickable {
-    private static final int MAX = 3;
+    private static final int MAX = 4;
+    private static final int START = 1;
 
-    private double target;
-    private double shown;
+    private double target = START;
+    private double shown = START;
     private boolean overflow;
     private int strikes;
     private double time;
@@ -22,7 +23,7 @@ public class StinkometerPanel extends JPanel implements AnimationClock.Tickable 
 
     public void setLevel(int strikes) {
         this.strikes = strikes;
-        this.target = Math.min(strikes, MAX);
+        this.target = Math.min(START + strikes, MAX);
     }
 
     public void setOverflow(boolean o) {
@@ -32,8 +33,8 @@ public class StinkometerPanel extends JPanel implements AnimationClock.Tickable 
 
     public void reset() {
         strikes = 0;
-        target = 0;
-        shown = 0;
+        target = START;
+        shown = START;
         overflow = false;
     }
 
@@ -88,7 +89,7 @@ public class StinkometerPanel extends JPanel implements AnimationClock.Tickable 
         g2.setColor(Theme.INK);
         String label = "Stink-O-Meter";
         g2.drawString(label, (getWidth() - fm.stringWidth(label)) / 2, top + barH + 24);
-        String s = strikes + " / " + MAX;
+        String s = Math.min(START + strikes, MAX) + " / " + MAX;
         g2.drawString(s, (getWidth() - fm.stringWidth(s)) / 2, top + barH + 42);
         g2.dispose();
     }
