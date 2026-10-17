@@ -6,20 +6,20 @@ public class Node {
     public ArrayList<String> position;
 
     public Node(String id, String name, ArrayList<String> position) {
-        self.id = id;
-        self.name = name;
-        self.position = position;
+        this.id = id;
+        this.name = name;
+        this.position = position;
     }
 
     public String getId() {
-        return self.id;
+        return this.id;
     }
 
     public String getName() {
-        return self.name;
+        return this.name;
     }
 
     public ArrayList<String> getPos() {
-        return self.position;
+        return this.position;
     }
 }
