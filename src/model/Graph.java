@@ -1,113 +1,77 @@
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+package model;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
+/** The six-node Glasgow map. Layout is fixed; weights are filled in by WeightGenerator. */
 public class Graph {
-    public Map<String, Node> nodes;
-    public Map<String, List<Edge>> adjacentNodes;
-    public Map<Edge, Integer> originalWeights;
-
-    public Graph(Map<String, Node> nodes, Map<String, List<Edge>> adjacency) {
-        this.nodes = nodes;
-        this.adjacentNodes = adjacency;
-    }
+    private final Map<String, Node> nodes = new LinkedHashMap<>();
+    private final Map<String, List<Edge>> adjacency = new HashMap<>();
+    private final List<Edge> edges = new ArrayList<>();
 
     public void addNode(Node node) {
         nodes.put(node.getId(), node);
-        adjacentNodes.put(node.getId(), new ArrayList<>());
+        adjacency.put(node.getId(), new ArrayList<>());
     }
 
-    public void addEdge(String idA, String idB, Integer weight) {
+    public void addEdge(String idA, String idB, int weight) {
         Node a = nodes.get(idA);
         Node b = nodes.get(idB);
-
-        if (a == null || b == null ) {
+        if (a == null || b == null) {
             throw new IllegalArgumentException("Unknown node in edge: " + idA + " - " + idB);
         }
-
-        Edge edge = new Edge(new ArrayList<>(List.of(a, b)), weight);
-        adjacentNodes.get(idA).add(edge);
-        adjacentNodes.get(idB).add(edge);
-
-        originalWeights.put(edge, weight);
+        Edge e = new Edge(a, b, weight);
+        edges.add(e);
+        adjacency.get(idA).add(e);
+        adjacency.get(idB).add(e);
     }
 
-    public static Graph load(String path) throws IOException {
-        String json = Files.readString(Path.of(path));
-        JsonObject root = new Gson().fromJson(json, JsonObject.class);
-
+    /** Matches the wireframe. Weights are placeholders (1) until randomised. */
+    public static Graph createDefault() {
         Graph g = new Graph();
+        g.addNode(new Node("lecture", "Lecture",   110, 270));
+        g.addNode(new Node("boyd",    "Boyd Orr",  270, 140));
+        g.addNode(new Node("ovo",     "OVO Hydro", 540, 140));
+        g.addNode(new Node("clyde",   "The Clyde", 270, 390));
+        g.addNode(new Node("wunder",  "Wunderbar", 540, 390));
+        g.addNode(new Node("home",    "Home",      700, 270));
 
-        for (JsonElement el : root.getAsJsonArray("nodes")) {
-            JsonObject n = el.getAsJsonObject();
-            ArrayList<String> position = new ArrayList<>();
-
-            if (n.has("position")) {
-                for (JsonElement p : n.getAsJsonArray("position")) {
-                    position.add(p.getAsString());
-                }
-            }
-            
-            g.addNode(new Node(
-                n.get("id").getAsString(),
-                n.has("name") ? n.get("name").getAsString() : n.get("id").getAsString(),
-                position));
-        }
-
-        for (JsonElement el : root.getAsJsonArray("edges")) {
-            JsonObject e = el.getAsJsonObject();
-            g.addEdge(
-                e.get("from").getAsString(),
-                e.get("to").getAsString(),
-                e.has("weight") ? e.get("weight").getAsInt() : 1);
-        }
-
+        g.addEdge("lecture", "boyd", 1);
+        g.addEdge("lecture", "clyde", 1);
+        g.addEdge("boyd", "clyde", 1);
+        g.addEdge("boyd", "ovo", 1);
+        g.addEdge("clyde", "ovo", 1);
+        g.addEdge("clyde", "wunder", 1);
+        g.addEdge("ovo", "wunder", 1);
+        g.addEdge("ovo", "home", 1);
+        g.addEdge("wunder", "home", 1);
         return g;
     }
 
-    public Node getNode(String id) {
-        return nodes.get(id);
-    }
+    public Node getNode(String id) { return nodes.get(id); }
 
-    public Collection<Node> getNodes() {
-        return Colletions.unmodifiableCollection(nodes.values());
-    }
+    public Collection<Node> getNodes() { return Collections.unmodifiableCollection(nodes.values()); }
+
+    public List<Edge> getEdges() { return Collections.unmodifiableList(edges); }
 
     public List<Edge> getEdges(String nodeId) {
-        return Collections.unmodifiableList(adjacentNodes.getOrDefault(nodeId, List.of()));
+        return Collections.unmodifiableList(adjacency.getOrDefault(nodeId, List.of()));
     }
 
     public Node getOtherNode(Edge edge, String nodeId) {
-        for (Node n : edge.getConnectedNodes()) {
-            if (!n.getId().equals(nodeID)) return n;
-        }
-
-        return null;
+        return edge.getA().getId().equals(nodeId) ? edge.getB() : edge.getA();
     }
 
     public List<Node> getNeighbours(String nodeId) {
         List<Node> result = new ArrayList<>();
-        for (Edge e : getEdges(nodeId)) {
-            result.add(getOtherNode(e, nodeId));
-        }
-
+        for (Edge e : getEdges(nodeId)) result.add(getOtherNode(e, nodeId));
         return result;
     }
 
-    public void setAllWeights(Integer weight) {
-        for (Edge e : originalWeights.keySet()) {
-            e.setWeight(weight);
+    /** The road between two nodes, or null if there isn't one. */
+    public Edge getEdge(String idA, String idB) {
+        for (Edge e : getEdges(idA)) {
+            if (getOtherNode(e, idA).getId().equals(idB)) return e;
         }
-    }
-
-    public void resetWeights() {
-        for (Map.Entry<Edge, Integer> entry : originalWeights.entrySet()) {
-            entry.getKey().setWeight(entry.getValue());
-        }
+        return null;
     }
 }
