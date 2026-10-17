@@ -1,17 +1,19 @@
+import java.util.ArrayList;
+
 public class Edge {
     public ArrayList<Node> connectedNodes;
     public Integer weight;
 
-    public Edge(ArrayList<Node> connectedNodes, Integer weight) {
-        self.connectedNodes = connectedNodes;
-        self.weight = weight;
+    public Edge(ArrayList<Node> nodes, Integer weight) {
+        this.connectedNodes = nodes;
+        this.weight = weight;
     }
 
     public void setWeight(Integer newWeight) {
-        self.weight = newWeight;
+        this.weight = newWeight;
     }
 
     public ArrayList<Node> getConnectedNodes() {
-        return self.connectedNodes;
+        return this.connectedNodes;
     }
 }
