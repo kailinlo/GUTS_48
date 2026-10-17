@@ -1,40 +1,48 @@
 package logic;
 
-import java.util.Random;
-//assigning random edge weights + rejecting graphs that don't make game interesting 
-//option to reload demo edge weights (seed for this is logged)
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+//run dijstra algorithm on graph's current weights once through and records and algorithm st4ep before each pick + stores final shortest path
 
-public class WeightGenerator {
+public class Dijkstra {
 
-    private static final int MIN_WEIGHT = 2;       // minutes
-    private static final int MAX_WEIGHT = 15;
-    private static final int MAX_ATTEMPTS = 1000;  // loop max so it doesn't go on forever 
+    // import model.Graph when added 
+    // private final Graph graph;
+    private final String startId;     // lecture node
+    private final String endId;       // home node
 
-    private final long seed;
-    private final Random random;
+    private final List<AlgorithmStep> steps = new ArrayList<>();
+    private List<String> shortestPath = new ArrayList<>();   // ordered node ids, start to end
+    private int totalDistance;
 
-    //random seed generator 
-    public WeightGenerator() {
-        this(System.currentTimeMillis());
+    public Dijkstra(/* graph here, */ String startId, String endId) {
+        // this.graph = graph;
+        this.startId = startId;
+        this.endId = endId;
     }
 
-    //demo seed generator + logging 
-    public WeightGenerator(long seed) {
-        this.seed = seed;
-        this.random = new Random(seed);
-        System.out.println("WeightGenerator seed: " + seed);
+    /** runs algorithm and fills steps + shortestPath. */
+    public void run() {
+        //MAIN DIJKSTRA LOGIC 
+        // set up distances to start = 0, other distances = infinity, previous nodes= null
+        //
+        // while there are unvisited nodes, loop
+        //      set correctNextNode to nearest node with shortest distance
+        //      record an AlgorithmStep NOW, using the Set/Map
+        //      add node as a visited node
+        //      for each node not visited
+        //          newDist = distances[node] + edge weight
+        //          if newDist < distances[neighbour]
+        //              update distance and previous.
+        //
+        // reverse the path (from endID) to build shortestPath
+        //
     }
 
-    // assigning weights to all edges
-    public void generate(/*graph here*/) {
-        //logic here 
-    }
-
-    private boolean isInteresting(/*graph, dijkstra result*/) {
-        //logic here 
-        return true;
-    }
-
-    public long getSeed() { return seed; }
+    public List<AlgorithmStep> getSteps() { return steps; }
+    public List<String> getShortestPath() { return shortestPath; }
+    public int getTotalDistance() { return totalDistance;}
 }
