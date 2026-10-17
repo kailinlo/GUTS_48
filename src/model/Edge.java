@@ -1,19 +1,19 @@
-import java.util.ArrayList;
+package model;
 
+/** A road between two nodes. Weight = walking minutes, reassigned every game. */
 public class Edge {
-    public ArrayList<Node> connectedNodes;
-    public Integer weight;
+    private final Node a;
+    private final Node b;
+    private int weight;
 
-    public Edge(ArrayList<Node> nodes, Integer weight) {
-        this.connectedNodes = nodes;
+    public Edge(Node a, Node b, int weight) {
+        this.a = a;
+        this.b = b;
         this.weight = weight;
     }
 
-    public void setWeight(Integer newWeight) {
-        this.weight = newWeight;
-    }
-
-    public ArrayList<Node> getConnectedNodes() {
-        return this.connectedNodes;
-    }
+    public Node getA()      { return a; }
+    public Node getB()      { return b; }
+    public int getWeight()  { return weight; }
+    public void setWeight(int w) { this.weight = w; }
 }
