@@ -66,9 +66,9 @@ public class MapPanel extends JPanel implements AnimationClock.Tickable {
             } else {
                 background = ImageIO.read(in);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+} catch (Exception e) {
+    e.printStackTrace();
+}
     }
 
     // ---------- state setters (called by the controller) ----------
