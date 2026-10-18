@@ -7,7 +7,7 @@ import java.awt.Font;
 public final class Theme {
     private Theme() {}
 
-    public static final Color BG        = new Color(155, 160, 170);
+    public static final Color BG        = new Color(203, 222, 189);
     public static final Color PANEL     = new Color(240, 241, 243);
     public static final Color WHITE     = Color.WHITE;
     public static final Color INK       = new Color(30, 30, 30);
