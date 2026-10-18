@@ -2,6 +2,7 @@ import effects.AnimationClock;
 import game.GameController;
 import ui.IntroDialog;
 import ui.MainFrame;
+import ui.TutorialDialog;
 
 import javax.swing.SwingUtilities;
 
@@ -21,6 +22,7 @@ public class Main {
 
             // NEW: welcome pop-up (two slides) shown over the game when it opens
             new IntroDialog(frame).setVisible(true);
+            new TutorialDialog(frame).setVisible(true);
         });
     }
 }
