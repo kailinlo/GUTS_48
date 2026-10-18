@@ -6,12 +6,12 @@ An interactive walk-through demonstration game for Dijkstra's algorithm
 
 Implemented using Java and Java Swing
 
-INSTRUCTIONS
-initial set up
+INSTRUCTIONS < br / >
+initial set up 
 1. mkdir -p out
 2. javac -d out $(find src -name "*.java")
 
-to run game (random seed/fixed seed)
-java -cp out Main #random seed
-java -cp out Main 12345 #fixed seed (for live demo to always get a "good" graph)
+to run game (random seed/fixed seed)< br / >
+java -cp out Main #random seed < br / >
+java -cp out Main 12345 #fixed seed (for live demo to always get a "good" graph) < br / >
 
