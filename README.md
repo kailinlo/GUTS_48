@@ -12,6 +12,6 @@ Implemented using Java and Java Swing
 2. javac -d out $(find src -name "*.java")
 
 <b>to run game (random seed/fixed seed)<br/></b>
-java -cp out Main #random seed <br/>
-java -cp out Main 12345 #fixed seed (for live demo to always get a "good" graph) <br/>
+java -cp out:resources Main #random seed <br/>
+java -cp out:resources Main 12345 #fixed seed (for live demo to always get a "good" graph) <br/>
 
