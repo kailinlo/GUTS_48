@@ -1,5 +1,6 @@
 import effects.AnimationClock;
 import game.GameController;
+import ui.IntroDialog;
 import ui.MainFrame;
 
 import javax.swing.SwingUtilities;
@@ -13,11 +14,13 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             MainFrame frame = new MainFrame();
             GameController controller = new GameController(frame, seed);
-            controller.newGame("Welcome! You stink after a long lecture and need the quickest route home to the shower. "
-                    + "Dijkstra's algorithm finds it, but YOU run it: pick the right node each turn. "
-                    + "Three wrong answers and the Stink-O-Meter overflows!");
+            // EDITED: shorter opening message, because the intro pop-up now explains the story
+            controller.newGame("Good luck! Remember: Dijkstra always visits the unvisited node with the smallest distance.");
             AnimationClock.get().start();
             frame.setVisible(true);
+
+            // NEW: welcome pop-up (two slides) shown over the game when it opens
+            new IntroDialog(frame).setVisible(true);
         });
     }
 }

@@ -3,6 +3,8 @@ package game;
 import logic.AlgorithmStep;
 import model.Node;
 
+import java.util.Map;
+
 /** What GameSession tells the controller after the player does something. */
 public class ChoiceResult {
 
@@ -23,6 +25,15 @@ public class ChoiceResult {
         this.gameOver = gameOver;
     }
 
+    // EDITED: a funny message for each place the player can wrongly click (keyed by node id).
+    // Nodes not listed here (e.g. Home) fall back to a plain "No!".
+    private static final Map<String, String> WRONG_FLAVOUR = Map.of(
+        "boyd",   "You have walked into the wrong computing lab, oops! You start sweating from embarrassment.",
+        "clyde",  "You fell into the River Clyde, the water is pretty gross and your clothes are soaked!",
+        "ovo",    "You get caught in a sweaty mosh pit and you forgot to pack deodorant, not good...",
+        "wunder", "A local just vomited his Buckfast on you, ew!"
+    );
+
     private static String dist(int d) {
         return d == AlgorithmStep.INFINITY ? "\u221e" : d + " min";
     }
@@ -38,7 +49,10 @@ public class ChoiceResult {
         String about = chosenDist == AlgorithmStep.INFINITY
                 ? chosen.getName() + " hasn't been reached yet (distance \u221e)"
                 : chosen.getName() + " is " + chosenDist + " min away";
-        String message = "No! " + about + ", but " + right.getName() + " is only " + rightDist
+        // EDITED: place-specific message first, then the explanation of the right choice
+        String flavour = WRONG_FLAVOUR.get(chosen.getId());
+        String message = (flavour != null ? flavour + "\n" : "No! ")
+                + about + ", but " + right.getName() + " is only " + rightDist
                 + " min away. Dijkstra always visits the CLOSEST unvisited node first.";
         return new ChoiceResult(false, chosen, right, message, strikes, strikes >= maxStrikes);
     }
@@ -60,3 +74,4 @@ public class ChoiceResult {
     public int getStrikes()         { return strikes; }
     public boolean isGameOver()     { return gameOver; }
 }
+
