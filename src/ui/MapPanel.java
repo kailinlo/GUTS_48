@@ -65,7 +65,6 @@ public class MapPanel extends JPanel implements AnimationClock.Tickable {
                 System.out.println("map.png not found on the classpath");
             } else {
                 background = ImageIO.read(in);
-                System.out.println("Map loaded: " + (background != null));
             }
         } catch (Exception e) {
             e.printStackTrace();
