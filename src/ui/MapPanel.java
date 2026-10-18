@@ -15,6 +15,10 @@ import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.*;
 import java.util.List;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.InputStream;
 
 /** Draws the map, edge weights, clickable nodes and the student. Works in an 800x500 map space. */
 public class MapPanel extends JPanel implements AnimationClock.Tickable {
@@ -38,6 +42,8 @@ public class MapPanel extends JPanel implements AnimationClock.Tickable {
     private boolean clean, walking;
     private double time;
     private NodeClickListener listener;
+    private BufferedImage background;
+
 
     public MapPanel() {
         setBackground(Theme.PANEL);
@@ -54,6 +60,16 @@ public class MapPanel extends JPanel implements AnimationClock.Tickable {
                         ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getDefaultCursor());
             }
         });
+        try (InputStream in = getClass().getResourceAsStream("/map.png")) {
+            if (in == null) {
+                System.out.println("map.png not found on the classpath");
+            } else {
+                background = ImageIO.read(in);
+                System.out.println("Map loaded: " + (background != null));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // ---------- state setters (called by the controller) ----------
@@ -107,8 +123,14 @@ public class MapPanel extends JPanel implements AnimationClock.Tickable {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        if (background != null) {
+            g2.drawImage(background, 0, 0, getWidth(), getHeight(), null);
+            g2.setColor(new Color(255, 255, 255, 140));   // lower the 140 for a stronger image
+            g2.fillRect(0, 0, getWidth(), getHeight());
+        }
         g2.translate(offX(), offY());
         g2.scale(scale(), scale());
+
 
         drawEdges(g2);
         for (Node n : graph.getNodes()) drawNode(g2, n);
